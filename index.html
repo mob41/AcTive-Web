@@ -470,7 +470,7 @@
 	
 	function answer(num){
 		chgSlide(1);
-		$.ajax(url + "/api",{
+		$.ajax(url + "/api/",{
 			method: "GET",
 			data: {
 				"action": "answer",
@@ -496,7 +496,7 @@
 	}
 	
 	function connectActive(){
-		$.ajax(url + "/api",{
+		$.ajax(url + "/api/",{
 			method: "GET",
 			data: {
 				"action": "connect",
@@ -578,7 +578,7 @@
 	}
 	
 	function getEvents(){
-		$.ajax(url + "/api",{
+		$.ajax(url + "/api/",{
 			method: "GET",
 			data: {
 				"action": "events",
