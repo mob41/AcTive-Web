@@ -576,6 +576,49 @@
 		$("#addPartyModal").modal();	
 	}
 	
+	function addParty(){
+		var id = $("#addPartyId").val();	
+		var owner = $("#addPartyOwner").val();
+		var pass = $("#addPartyPass").val();
+		
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "partyControl",
+				"partyAction": "addParty",
+				"partyId": partyId,
+				"key": key,
+				"id": id,
+				"owner": owner,
+				"password": pass
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					//updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -3){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+				} else if (data.result == -2){
+					showMsg("Error", "Key expired. Please login again.");
+					clearInterval(eventInterval);
+					chgSlide(0);
+				} else if (data.result == -6 || data.result == -7){
+					showMsg("Error", "Invalid paramter(s) specified. Not an integer or not enough answers (<4)");	
+				} else if (data.result == -5){
+					showMsg("Error", "Party ID \"" + partyId + "\" does not exist.");	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
 	function setSlide(){
 		var slide = $("#changeSlide").val();
 		$.ajax({
