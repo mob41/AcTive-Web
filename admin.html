@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AcTive!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">AcTive!</a>
+            </div>
+            <!-- /.navbar-header -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="index.html"><i class="fa fa-fire fa-fw"></i> Start Game Session</a>
+                        </li>
+                        <li>
+                            <a href="#" onclick="party()"><i class="fa fa-user fa-fw"></i> Party Management</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row" id="connectHeader">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Administration</h1>
+                </div>
+            </div>
+            <div class="row" id="connectBody">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	AcTive! Administration Console
+                        </div>
+                        <div class="panel-body">
+                        	<div class="form-group">
+                            	<label>Username:</label>
+                            	<input type="text" class="form-control" id="username" value="" />
+                             </div>
+                        	<div class="form-group">
+                            	<label>Password</label>
+                            	<input type="password" class="form-control" id="password" value="" />
+                             </div>
+                             <input type="button" class="btn btn-primary" onclick="scrConnect()" value="Login" />
+                            
+                        	</div>
+                        <div class="panel-footer">
+                        	Copyright (c) 2017 Anthony Law. Licensed under the GPLv3 Public License.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="connectingHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Connecting</h1>
+                </div>
+            </div>
+            <div class="row" id="connectingBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-warning">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-clock-o"></i> Connecting
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-xs-3">
+                                	<img width="50" height="50" src="loading.gif" />
+                                </div>
+                                <div class="col-xs-9">
+                                	<p>Please wait for connecting to server... it might take a while</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="partyHeader" style="display: none">
+            	<div class="col-lg-12">
+                    <h1 class="page-header" id="partyTitle">Unknown Party</h1>
+                </div>
+            </div>
+            <div class="row" id="partyInfoBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-file-text-o"></i> Information
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-lg-12">
+                                    <p id="partyId"></p>
+                                	<p id="partyOwner"></p>
+                                    <p id="partyPass"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="partyPlayersBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-user"></i> Players
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-lg-12">
+                                	<table class="table table-striped table-bordered table-hover">
+                                    	<thead>
+                                    		<tr>
+                                        		<th>Nickname</th>
+                                            	<th>Score</th>
+                                            	<th>Streak</th>
+                                            	<th>Answered question</th>
+                                                <th>Answered question answer</th>
+                                                <th>Last connect (ms)</th>
+                                                <th>Latency (ms)</th>
+                                                <th>Availability</th>
+                                        	</tr>
+                                    	</thead>
+                                        <tbody id="partyPlayersTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="partyQuestionsBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-comments-o"></i> Questions
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-lg-12">
+                                	<table class="table table-striped table-bordered table-hover">
+                                    	<thead>
+                                    		<tr>
+                                            	<th>Selected as current?</th>
+                                        		<th>Question</th>
+                                            	<th>Answers</th>
+                                            	<th>Correct answer (index)</th>
+                                            	<th>Timeout (ms)</th>
+                                                <th>End Time (ms)</th>
+                                                <th>Action</th>
+                                        	</tr>
+                                    	</thead>
+                                        <tbody id="partyQuestionsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        	<button class="btn btn-success" onclick="addQues()">Add question</button> <button class="btn btn-info" onclick="addQuesFile()">Add questions by file</button> <button class="btn btn-default" onclick="nextQues()">Next question as current</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="partySlideBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-flash"></i> Slide Management
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-lg-12">
+                                	<div class="form-group">
+                                    	<label>Set slide as:</label>
+                                        <select id="changeSlide" class="form-control">
+                                        	<option value="0">Waiting</option>
+                                            <option value="1">Question</option>
+                                            <option value="2">Scoreboard</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        	<button class="btn btn-success" onclick="setSlide()">Set slide</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="partiesHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Parties</h1>
+                </div>
+            </div>
+            <div class="row" id="partiesBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-user"></i> List of parties
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-lg-12">
+                                	<table class="table table-striped table-bordered table-hover">
+                                    	<thead>
+                                    		<tr>
+                                        		<th>ID</th>
+                                            	<th>Owner</th>
+                                            	<th>Players</th>
+                                            	<th>Questions</th>
+                                                <th>Action</th>
+                                        	</tr>
+                                    	</thead>
+                                        <tbody id="partyTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        	<button class="btn btn-success" onclick="addParty()">Add Party</button> <button class="btn btn-default" onclick="updatePartiesData()">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="questionHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><div id="quesNum">Question.Unkn</div></h1>
+                </div>
+            </div>
+            <div class="row" id="questionBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-danger">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-comment-o"></i> Question in AcTive!
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-xs-3">
+                                	<i class="fa fa-comment-o fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9">
+                                	<div id="ques">Error: No question requested</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        	<p>
+                            	<strong>Remaining time</strong>
+                                <span class="pull-right text-muted" id="timeText"></span>
+                            </p>
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" id="timePb" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                	<span class="sr-only" id="timePbText"></span>
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row show-grid" id="answerButtons" style="display: none">
+                <div class="row" style="height:125px">
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-primary btn-lg btn-block" id="ans1" onclick="answer(1)">1st Button</button>
+                    </div>
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-success btn-lg btn-block" id="ans2" onclick="answer(2)">2nd Button</button>
+                    </div>
+                </div>
+                <div class="row" style="height:125px">
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-warning btn-lg btn-block" id="ans3" onclick="answer(3)">3rd Button</button>
+                    </div>
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-danger btn-lg btn-block" id="ans4" onclick="answer(4)">4th Button</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="scoreHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Score</h1>
+                </div>
+            </div>
+            <div class="row" id="correctBody" style="display: none">
+            	<div class="col-xs-6 col-xs-offset-3">
+                	<div class="panel panel-success">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-file-text-o"></i> Result
+                        </div>
+                        <div class="panel-body">
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<p class="text-center"><i class="glyphicon glyphicon-ok fa-5x text-success"></i></p>
+                                </div>
+                            </div>
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<h3 class="text-center text-success">You got the correct answer!</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="wrongBody" style="display: none">
+            	<div class="col-xs-6 col-xs-offset-3">
+                	<div class="panel panel-danger">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-file-text-o"></i> Result
+                        </div>
+                        <div class="panel-body">
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<p class="text-center"><i class="glyphicon glyphicon-remove fa-5x text-danger"></i></p>
+                                </div>
+                            </div>
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<h3 class="text-center text-danger">Sorry, you got the wrong answer!</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="scoreBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-success">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-magic"></i> Your score in this round
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div id="playerScore" class="col-lg-12"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="scoreboardBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-primary">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-certificate"></i> Top 5
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div id="scoreBoard" class="col-lg-12"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    
+    <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="msgTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="msgTitle">Modal title</h4>
+            </div>
+            <div class="modal-body" id="msgBody">
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+     </div>
+     
+     <div class="modal fade" id="addPartyModal" tabindex="-1" role="dialog" aria-labelledby="addPartyTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="addPartyTitle">Add new party</h4>
+            </div>
+            <div class="modal-body" id="addPartyBody">
+            	<div id="form-group">
+                	<label>Party ID:</label>
+                	<input type="text" id="addPartyId" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Dedicated owner:</label>
+                	<input type="text" id="addPartyOwner" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Party Password:</label>
+                	<input type="text" id="addPartyPass" class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-success" onclick="addPartyFromModal()" data-dismiss="modal">Add</button>
+            	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+     </div>
+     
+     <div class="modal fade" id="addQuesModal" tabindex="-1" role="dialog" aria-labelledby="addQuesTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="addQuesTitle">Add new question</h4>
+            </div>
+            <div class="modal-body" id="addPartyBody">
+            	<div id="form-group">
+                	<label>Question:</label>
+                	<input type="text" id="addQuesQuestion" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Answer 1:</label>
+                	<input type="text" id="addQuesAns1" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Answer 2:</label>
+                	<input type="text" id="addQuesAns2" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Answer 3:</label>
+                	<input type="text" id="addQuesAns3" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Answer 4:</label>
+                	<input type="text" id="addQuesAns4" class="form-control" />
+                </div>
+            	<div id="form-group">
+                	<label>Correct answer number:</label>
+                    <select id="addQuesCorrAns" class="form-control">
+                    	<option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </div>
+            	<div id="form-group">
+                	<label>Timeout:</label>
+                	<input type="text" id="addQuesTimeout" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-success" onclick="addQuesFromModal()" data-dismiss="modal">Add</button>
+            	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+     </div>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="vendor/raphael/raphael.min.js"></script>
+    <script src="vendor/morrisjs/morris.min.js"></script>
+    <script src="data/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="dist/js/sb-admin-2.js"></script>
+    <script>
+	var eventInterval;
+	var key;
+	var partiesData;
+	var partyId;
+	var url = "http://play.mctnet.tk:2001";
+	//var url = "https://active.mctnet.tk:7321";
+	
+	$(document).ready(function (){
+		var paraUrl = findGetParameter("server");
+		
+		if (paraUrl != null){
+			url = paraUrl;
+		}
+	});
+	
+	function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    var items = location.search.substr(1).split("&");
+    for (var index = 0; index < items.length; index++) {
+        tmp = items[index].split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    }
+    return result;
+	}
+	
+	function scrConnect(){
+		$("#connectHeader").attr("style", "display: none");	
+		$("#connectBody").attr("style", "display: none");
+		$("#connectingHeader").attr("style", "display:");
+		$("#connectingBody").attr("style", "display:");
+		
+		connectActive();
+	}
+	
+	function addParty(){
+		$("#addPartyModal").modal();	
+	}
+	
+	function setSlide(){
+		var slide = $("#changeSlide").val();
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "partyControl",
+				"partyAction": "setSlide",
+				"partyId": partyId,
+				"slide": slide,
+				"key": key
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					//updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -3){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+				} else if (data.result == -2){
+					showMsg("Error", "Key expired. Please login again.");
+					clearInterval(eventInterval);
+					chgSlide(0);
+				} else if (data.result == -5){
+					showMsg("Error", "Party ID \"" + partyId + "\" does not exist.");	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function setCurrQues(ques){
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "partyControl",
+				"partyAction": "setCurrQues",
+				"partyId": partyId,
+				"question": ques,
+				"key": key
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					//updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -3){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+				} else if (data.result == -2){
+					showMsg("Error", "Key expired. Please login again.");
+					clearInterval(eventInterval);
+					chgSlide(0);
+				} else if (data.result == -5){
+					showMsg("Error", "Party ID \"" + partyId + "\" does not exist.");	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function addQues(){
+		$("#addQuesModal").modal();	
+	}
+	
+	function addQuesFromModal(){
+		var ques = $("#addQuesQuestion").val();	
+		var timeout = $("#addQuesTimeout").val();
+		var corrAns = $("#addQuesCorrAns").val();
+		var ans1 = $("#addQuesAns1").val();
+		var ans2 = $("#addQuesAns2").val();
+		var ans3 = $("#addQuesAns3").val();
+		var ans4 = $("#addQuesAns4").val();
+		
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "partyControl",
+				"partyAction": "addQues",
+				"partyId": partyId,
+				"key": key,
+				"question": ques,
+				"answers": ans1 + "|" + ans2 + "|" + ans3 + "|" + ans4,
+				"correctIndex": parseInt(corrAns) - 1,
+				"timeout": timeout
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					//updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -3){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+				} else if (data.result == -2){
+					showMsg("Error", "Key expired. Please login again.");
+					clearInterval(eventInterval);
+					chgSlide(0);
+				} else if (data.result == -6 || data.result == -7){
+					showMsg("Error", "Invalid paramter(s) specified. Not an integer or not enough answers (<4)");	
+				} else if (data.result == -5){
+					showMsg("Error", "Party ID \"" + partyId + "\" does not exist.");	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function connectActive(){
+		var username = $("#username").val();
+		var password = $("#password").val();
+		
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "login",
+				"username": username,
+				"password": password
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					chgSlide(2);
+					key = data.key;
+					updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -1){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+					chgSlide(0);
+				} else if (data.result == -2){
+					showMsg("Error", "Incorrect username or password");
+					chgSlide(0);	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function updatePartiesData(){
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "parties",
+				"key": key
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				partiesData = data;
+				updatePartiesUi();
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function partyControl(num){
+		clearInterval(eventInterval);
+		chgSlide(3);
+		updatePartyUi(num);
+		eventInterval = setInterval(function(){
+			updatePartiesData();
+			
+			var num = -1;
+			for (var i = 0; i < partiesData.parties.length; i++){
+				if (partiesData.parties[i].id == partyId){
+					num = i;
+				}
+			}
+			
+			updatePartyUi(num);
+			}, 1000);
+	}
+	
+	function updatePartyUi(num){
+		var party = partiesData.parties[num];
+		$("#partyId").html("ID: " + party.id);
+		partyId = party.id;
+		$("#partyOwner").html("Owner: " + party.owner);
+		$("#partyPass").html("Password: " + party.password);
+		
+		var playersStr = "";
+		var players = party.players;
+		for (var i = 0; i < players.length; i++){
+			var player = players[i];
+			var lat = new Date().getTime() - player.lastConnect;
+			
+			playersStr += "<tr>";
+			
+			playersStr += "<td>" + player.nickName + "</td>";
+			playersStr += "<td>" + player.score + "</td>";
+			playersStr += "<td>" + player.streak + "</td>";
+			playersStr += "<td>" + (player.answeredQuestion != null ? player.answeredQuestion.question + " <button class=\"btn btn-warning\" onclick=\"linkToQues('" + player.answeredQuestion.question + "')\">Link To</button>" : "None") + "</td>";
+			playersStr += "<td>" + player.answeredQuestionAns + "</td>";
+			playersStr += "<td>" + player.lastConnect + "</td>";
+			playersStr += "<td>" + (lat <= 30000 ? lat + " ms" : "---") + "</td>";
+			playersStr += "<td>" + (lat > 30000 ? "Offline" : "Online") + "</td>";
+			
+			playersStr += "</tr>";
+		}
+		$("#partyPlayersTableBody").html(playersStr);
+		
+		var quesStr = "";
+		var quess = party.questions;
+		for (var i = 0; i < quess.length; i++){
+			var ques = quess[i];
+			
+			quesStr += "<tr>";
+			
+			quesStr += "<td>" + (ques.current ? "Yes" : "No" ) + "</td>";
+			quesStr += "<td>" + ques.question + "</td>";
+			quesStr += "<td>" + ques.answers.length + " <button class=\"btn btn-warning\" onclick=\"showAnswers('" + ques.question + "')\">Show</button></td>";
+			quesStr += "<td>" + ques.answers[ques.correctIndex] + " (" + ques.correctIndex + ")</td>";
+			quesStr += "<td>" + ques.timeout + " ms</td>";
+			quesStr += "<td>" + ques.endTime + "</td>";
+			quesStr += "<td><button class=\"btn btn-info\" onclick=\"setCurrQues('" + ques.question + "')\">Set as current</button></td>";
+			
+			quesStr += "</tr>";
+		}
+		$("#partyQuestionsTableBody").html(quesStr);	
+	}
+	
+	function updatePartiesUi(){
+		var tbodyNode = $("#partyTableBody");
+		
+		var str = "";
+		if (partiesData != null){
+			for (var i = 0; i < partiesData.parties.length; i++){
+				var party = partiesData.parties[i];
+				str += "<tr>";
+				
+				str += "<td>" + party.id + "</td>";
+				str += "<td>" + party.owner + "</td>";
+				str += "<td>" + party.players.length + "</td>";
+				str += "<td>" + party.questions.length + "</td>";
+				str += "<td><button class=\"btn btn-success\" onclick=\"partyControl(" + i + ")\">Control</button></td>";
+				
+				str += "</tr>";
+			}
+		}
+		tbodyNode.html(str);
+	}
+	
+	function chgSlide(num){
+		$("#connectHeader").attr("style", "display: none");
+		$("#connectBody").attr("style", "display: none");
+		
+		$("#connectingHeader").attr("style", "display: none");
+		$("#connectingBody").attr("style", "display: none");
+		
+		$("#partiesHeader").attr("style", "display: none");
+		$("#partiesBody").attr("style", "display: none");
+		
+		$("#partyHeader").attr("style", "display: none");
+		
+		$("#partyInfoBody").attr("style", "display: none");
+		$("#partyPlayersBody").attr("style", "display: none");
+		$("#partyQuestionsBody").attr("style", "display: none");
+		$("#partySlideBody").attr("style", "display: none");
+		
+		/*
+		$("#questionHeader").attr("style", "display: none");
+		$("#questionBody").attr("style", "display: none");
+		$("#answerButtons").attr("style", "display: none");
+		
+		$("#scoreHeader").attr("style", "display: none");
+		$("#scoreBody").attr("style", "display: none");
+		$("#scoreboardBody").attr("style", "display: none");
+		
+		$("#correctBody").attr("style", "display: none");
+		$("#wrongBody").attr("style", "display: none");
+		*/
+		if (num == 0){ //Connect
+			$("#connectHeader").attr("style", "display:");
+			$("#connectBody").attr("style", "display:");
+		} else if (num == 1){ //Connecting
+			$("#connectingHeader").attr("style", "display:");
+			$("#connectingBody").attr("style", "display:");
+		} else if (num == 2){ //Parties
+			$("#partiesHeader").attr("style", "display:");
+			$("#partiesBody").attr("style", "display:");	
+		} else if (num == 3){ //Party
+			$("#partyHeader").attr("style", "display:");
+			$("#partyInfoBody").attr("style", "display:");
+			$("#partyPlayersBody").attr("style", "display:");
+			$("#partyQuestionsBody").attr("style", "display:");
+			$("#partySlideBody").attr("style", "display:");
+		} else if (num == 4){ //Score
+			$("#scoreHeader").attr("style", "display:");
+			$("#scoreBody").attr("style", "display:");
+			$("#scoreboardBody").attr("style", "display:");
+		}
+	}
+	
+	function getEvents(){
+		$.ajax(url + "/api",{
+			method: "GET",
+			data: {
+				"action": "events",
+				"party": partyId,
+				"name": name,
+				"uid": uid
+			},
+			timeout: 10000,
+			dataType: "json",
+			success: function(data){
+				if (data.result == 1){
+					clearInterval(eventInterval);
+					showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> The last session cannot be recovered because the nickname no longer exist. Please connect again.");
+					chgSlide(0);
+					cleanup();
+					return;	
+				}
+				
+				console.log(data);
+				if (data.slide == 0){ //Locked
+					chgSlide(2);
+					$("#awaitingNickName").html("Hi, " + name + "!");
+				} else if (data.slide == 1){ //Questions
+					chgSlide(3);
+					$("#quesNum").html("Question No." + data.quesNum);
+					$("#ques").html(data.ques);
+					
+					var left = ((data.time - new Date().getTime()));
+					var percent = left / data.timeout * 100;
+					
+					$("#timeText").html(left / 1000 + " sec left");
+					$("#timePbText").html(left / 1000 + " sec left");
+					$("#timePb").attr("aria-valuenow", percent);
+					$("#timePb").attr("style", "width: " + percent + "%");
+					
+					$("#ans1").html(data.ans[0]);
+					$("#ans2").html(data.ans[1]);
+					$("#ans3").html(data.ans[2]);
+					$("#ans4").html(data.ans[3]);
+					
+				} else if (data.slide == 2){ //Score
+					chgSlide(4);	
+					$("#playerScore").html(data.scoreHtml);
+					$("#scoreBoard").html(data.scoreboardHtml);
+					
+					if (data.correct){
+						$("#correctBody").attr("style", "display:");
+					} else {
+						$("#wrongBody").attr("style", "display:");	
+					}
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not communicate with server to get latest events: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+				clearInterval(eventInterval);
+			}
+		});
+	}
+	
+	function showMsg(title, desc){
+		$("#msgTitle").html(title);
+		$("#msgBody").html(desc);
+		$("#msgModal").modal();	
+	}
+	</script>
+
+</body>
+
+</html>

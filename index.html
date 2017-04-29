@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AcTive!</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">AcTive!</a>
+            </div>
+            <!-- /.navbar-header -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Experimental</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row" id="connectHeader">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Connect!</h1>
+                </div>
+            </div>
+            <div class="row" id="connectBody">
+                <div class="col-lg-12">
+                	<div class="panel panel-info">
+                    	<div class="panel-heading">
+                        	Connect to AcTive Party
+                        </div>
+                        <div class="panel-body">
+                        	<div class="form-group">
+                            	<label>AcTive! Party ID:</label>
+                            	<input type="text" class="form-control" id="connectId" value="" />
+                             </div>
+                        	<div class="form-group">
+                            	<label>Your nickname:</label>
+                            	<input type="text" class="form-control" id="nickName" value="" />
+                             </div>
+                             <input type="button" class="btn btn-primary" onclick="scrConnect()" value="Connect!" />
+                            
+                        	</div>
+                        <div class="panel-footer">
+                        	Copyright (c) 2017 Anthony Law. Licensed under the GPLv3 Public License.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="connectingHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Connecting</h1>
+                </div>
+            </div>
+            <div class="row" id="connectingBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-warning">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-clock-o"></i> Connecting
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-xs-3">
+                                	<img width="50" height="50" src="loading.gif" />
+                                </div>
+                                <div class="col-xs-9">
+                                	<p>Please wait for connecting to server... it might take a while</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="awaitingHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Waiting</h1>
+                </div>
+            </div>
+            <div class="row" id="awaitingBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-warning">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-clock-o"></i> Waiting
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-xs-3">
+                                	<img width="50" height="50" src="loading.gif" />
+                                </div>
+                                <div class="col-xs-9">
+                                	<p id="awaitingNickName">Error!No NickNameDisplayed</p>
+                            
+                            <p>You are in place! The game is about to start!</p>
+                            <br />
+                            <b>Do not refresh this page unless you are leaving. All scores and your name might be reset if you do so.</b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="questionHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><div id="quesNum">Question.Unkn</div></h1>
+                </div>
+            </div>
+            <div class="row" id="questionBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-danger">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-comment-o"></i> Question in AcTive!
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div class="col-xs-3">
+                                	<i class="fa fa-comment-o fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9">
+                                	<div id="ques">Error: No question requested</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        	<p>
+                            	<strong>Remaining time</strong>
+                                <span class="pull-right text-muted" id="timeText"></span>
+                            </p>
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" id="timePb" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                	<span class="sr-only" id="timePbText"></span>
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row show-grid" id="answerButtons" style="display: none">
+                <div class="row" style="height:125px">
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-primary btn-lg btn-block" id="ans1" onclick="answer(1)">1st Button</button>
+                    </div>
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-success btn-lg btn-block" id="ans2" onclick="answer(2)">2nd Button</button>
+                    </div>
+                </div>
+                <div class="row" style="height:125px">
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-warning btn-lg btn-block" id="ans3" onclick="answer(3)">3rd Button</button>
+                    </div>
+                	<div class="col-xs-6" style="height:100%">
+                    	<button type="button" style="height:100%" class="btn btn-danger btn-lg btn-block" id="ans4" onclick="answer(4)">4th Button</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="scoreHeader" style="display: none">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Score</h1>
+                </div>
+            </div>
+            <div class="row" id="correctBody" style="display: none">
+            	<div class="col-xs-6 col-xs-offset-3">
+                	<div class="panel panel-success">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-file-text-o"></i> Result
+                        </div>
+                        <div class="panel-body">
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<p class="text-center"><i class="glyphicon glyphicon-ok fa-5x text-success"></i></p>
+                                </div>
+                            </div>
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<h3 class="text-center text-success">You got the correct answer!</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="wrongBody" style="display: none">
+            	<div class="col-xs-6 col-xs-offset-3">
+                	<div class="panel panel-danger">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-file-text-o"></i> Result
+                        </div>
+                        <div class="panel-body">
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<p class="text-center"><i class="glyphicon glyphicon-remove fa-5x text-danger"></i></p>
+                                </div>
+                            </div>
+                        	<div id="row">
+                            	<div class="col-lg-12">
+                                	<h3 class="text-center text-danger">Sorry, you got the wrong answer!</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="scoreBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-success">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-magic"></i> Your score in this round
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div id="playerScore" class="col-lg-12"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="scoreboardBody" style="display: none">
+                <div class="col-lg-12">
+                	<div class="panel panel-primary">
+                    	<div class="panel-heading">
+                        	<i class="fa fa-certificate"></i> Top 5
+                        </div>
+                        <div class="panel-body">
+                        	<div class="row">
+                            	<div id="scoreBoard" class="col-lg-12"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    
+    <div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="msgTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="msgTitle">Modal title</h4>
+            </div>
+            <div class="modal-body" id="msgBody">
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+     </div>
+     
+     <div class="modal fade" id="askNickModal" tabindex="-1" role="dialog" aria-labelledby="askNickTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="askNickTitle">Nickname</h4>
+            </div>
+            <div class="modal-body">
+            	<div id="form-group">
+                	<label>Enter your nickname:</label>
+                    <input type="text" id="askNickField" class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-success" data-dismiss="modal" onclick="$('#nickName').val($('#askNickField').val()); scrConnect();">Connect</button>
+            	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+     </div>
+     
+     <div class="modal fade" id="askRecoverModal" tabindex="-1" role="dialog" aria-labelledby="askRecoverTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="askRecoverTitle">Last session</h4>
+            </div>
+            <div class="modal-body">
+            	Do you want to recover the last session?
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-success" data-dismiss="modal" onclick="recover()">Yes</button>
+            	<button type="button" class="btn btn-default" data-dismiss="modal" onclick="cleanup()">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+     </div>
+     <!-- /.modal-dialog -->
+     </div>
+    
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="vendor/raphael/raphael.min.js"></script>
+    <script src="vendor/morrisjs/morris.min.js"></script>
+    <script src="data/morris-data.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="dist/js/sb-admin-2.js"></script>
+    <script>
+	var eventInterval;
+	var partyId = -1;
+	var name = null;
+	var uid = null;
+	var url = "http://play.mctnet.tk:2001";
+	//var url = "https://active.mctnet.tk:7321";
+	
+	$(document).ready(function (){
+		var paraPartyId = findGetParameter("partyId");
+		var paraUrl = findGetParameter("server");
+		var paraNick = findGetParameter("nick");
+		var autoConn = findGetParameter("auto");
+		var askNick = findGetParameter("askNick");
+		var cleanup = findGetParameter("cleanup");
+		if (paraPartyId != null){
+			partyId = paraPartyId;
+			$("#connectId").val(partyId);
+		}
+		if (paraUrl != null){
+			url = paraUrl;
+		}
+		if (paraNick != null){
+			name = paraNick;
+			$("#nickName").val(name);
+		}
+		if (askNick != null && askNick == "true"){
+			$("#askNickModal").modal();
+		}
+		if (autoConn != null && autoConn == "true"){
+			scrConnect();	
+		}
+		
+		if (cleanup != null && cleanup == "true"){
+			cleanup();
+		}
+		
+		if ((askNick == null || askNick != "true") &&
+		 (autoConn == null || autoConn != "true") &&
+		 typeof(localStorage) !== null){
+			var lsuid = localStorage.getItem("uid");
+			var lsnick = localStorage.getItem("nick");
+			var lsserver = localStorage.getItem("server");
+			var lspartyId = localStorage.getItem("partyId");
+			if (lsuid != null && lsnick != null && lsserver != null && lspartyId != null){
+				//$("#askRecoverModal").modal();
+				recover();
+			}
+		}
+	});
+	
+	function recover(){
+		if (typeof(localStorage) !== null){
+			uid = localStorage.getItem("uid");
+			name = localStorage.getItem("nick");
+			url = localStorage.getItem("server");
+			partyId = localStorage.getItem("partyId");
+			
+			$("#connectId").val(partyId);
+			$("#nickName").val(name);
+			
+			chgSlide(1);
+			eventInterval = setInterval(function(){getEvents()}, 1000);
+		}
+	}
+	
+	function cleanup(){
+		if (typeof(localStorage) !== null){
+			localStorage.removeItem("uid");
+			localStorage.removeItem("nick");
+			localStorage.removeItem("server");
+			localStorage.removeItem("partyId");
+		}
+	}
+	
+	function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    var items = location.search.substr(1).split("&");
+    for (var index = 0; index < items.length; index++) {
+        tmp = items[index].split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    }
+    return result;
+	}
+	
+	function scrConnect(){
+		$("#connectHeader").attr("style", "display: none");	
+		$("#connectBody").attr("style", "display: none");
+		$("#connectingHeader").attr("style", "display:");
+		$("#connectingBody").attr("style", "display:");
+		partyId = $("#connectId").val();
+		name = $("#nickName").val();	
+		
+		connectActive();
+	}
+	
+	function answer(num){
+		chgSlide(1);
+		$.ajax(url + "/api",{
+			method: "GET",
+			data: {
+				"action": "answer",
+				"party": partyId,
+				"name": name,
+				"uid": uid,
+				"answer": num
+			},
+			timeout: 10000,
+			dataType: "json",
+			success: function(data){
+				if (data.result != 0){
+					alert("Error when trying to answer: " + data.result);
+				} else if (data.result == 0){
+					chgSlide(2);
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server to answer: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function connectActive(){
+		$.ajax(url + "/api",{
+			method: "GET",
+			data: {
+				"action": "connect",
+				"party": partyId,
+				"name": name
+			},
+			timeout: 10000,
+			dataType: "json",
+			success: function(data){
+				if (data.result == 1){
+					showMsg("Error", "Your nickname has already exist. Please choose another one.");
+					chgSlide(0);
+				} else if (data.result == 0){
+					chgSlide(2);
+					$("#awaitingNickName").html("Hi, " + name + "!");
+					
+					uid = data.uid;
+					if (typeof(localStorage) !== null){
+						localStorage.setItem("uid", uid);
+						localStorage.setItem("nick", name);	
+						localStorage.setItem("server", url);
+						localStorage.setItem("partyId", partyId);			
+					}
+					eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -1){
+					showMsg("Error", "Party ID or nickname must not be empty.");
+					chgSlide(0);
+				} else if (data.result == -2){
+					showMsg("Error", "The specified Party ID does not exist.");
+					chgSlide(0);	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function chgSlide(num){
+		$("#connectHeader").attr("style", "display: none");
+		$("#connectBody").attr("style", "display: none");
+		
+		$("#connectingHeader").attr("style", "display: none");
+		$("#connectingBody").attr("style", "display: none");
+		
+		$("#awaitingHeader").attr("style", "display: none");
+		$("#awaitingBody").attr("style", "display: none");
+		
+		$("#questionHeader").attr("style", "display: none");
+		$("#questionBody").attr("style", "display: none");
+		$("#answerButtons").attr("style", "display: none");
+		
+		$("#scoreHeader").attr("style", "display: none");
+		$("#scoreBody").attr("style", "display: none");
+		$("#scoreboardBody").attr("style", "display: none");
+		
+		$("#correctBody").attr("style", "display: none");
+		$("#wrongBody").attr("style", "display: none");
+		
+		if (num == 0){ //Connect
+			$("#connectHeader").attr("style", "display:");
+			$("#connectBody").attr("style", "display:");
+		} else if (num == 1){ //Connecting
+			$("#connectingHeader").attr("style", "display:");
+			$("#connectingBody").attr("style", "display:");
+		} else if (num == 2){ //Awaiting / Locked
+			$("#awaitingHeader").attr("style", "display:");
+			$("#awaitingBody").attr("style", "display:");		
+		} else if (num == 3){ //Question
+			$("#questionHeader").attr("style", "display:");
+			$("#questionBody").attr("style", "display:");
+			$("#answerButtons").attr("style", "display:");
+		} else if (num == 4){ //Score
+			$("#scoreHeader").attr("style", "display:");
+			$("#scoreBody").attr("style", "display:");
+			$("#scoreboardBody").attr("style", "display:");
+		}
+	}
+	
+	function getEvents(){
+		$.ajax(url + "/api",{
+			method: "GET",
+			data: {
+				"action": "events",
+				"party": partyId,
+				"name": name,
+				"uid": uid
+			},
+			timeout: 10000,
+			dataType: "json",
+			success: function(data){
+				if (data.result == 1){
+					clearInterval(eventInterval);
+					showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> The last session cannot be recovered because the nickname no longer exist. Please connect again.");
+					chgSlide(0);
+					cleanup();
+					return;	
+				} else if (data.result == -2){
+					clearInterval(eventInterval);
+					showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> The last session cannot be recovered because the party ID no longer exist. Please connect again.");
+					chgSlide(0);
+					cleanup();
+					return;	
+				}
+				
+				console.log(data);
+				if (data.slide == 0){ //Locked
+					chgSlide(2);
+					$("#awaitingNickName").html("Hi, " + name + "!");
+				} else if (data.slide == 1){ //Questions
+					chgSlide(3);
+					$("#quesNum").html("Question No." + data.quesNum);
+					$("#ques").html(data.ques);
+					
+					var left = ((data.time - new Date().getTime()));
+					var percent = left / data.timeout * 100;
+					
+					$("#timeText").html(left / 1000 + " sec left");
+					$("#timePbText").html(left / 1000 + " sec left");
+					$("#timePb").attr("aria-valuenow", percent);
+					$("#timePb").attr("style", "width: " + percent + "%");
+					
+					$("#ans1").html(data.ans[0]);
+					$("#ans2").html(data.ans[1]);
+					$("#ans3").html(data.ans[2]);
+					$("#ans4").html(data.ans[3]);
+					
+				} else if (data.slide == 2){ //Score
+					chgSlide(4);	
+					$("#playerScore").html(data.scoreHtml);
+					$("#scoreBoard").html(data.scoreboardHtml);
+					
+					if (data.correct){
+						$("#correctBody").attr("style", "display:");
+					} else {
+						$("#wrongBody").attr("style", "display:");	
+					}
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not communicate with server to get latest events: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+				clearInterval(eventInterval);
+			}
+		});
+	}
+	
+	function showMsg(title, desc){
+		$("#msgTitle").html(title);
+		$("#msgBody").html(desc);
+		$("#msgModal").modal();	
+	}
+	</script>
+
+</body>
+
+</html>
