@@ -142,6 +142,7 @@
                                     <p id="partyId"></p>
                                 	<p id="partyOwner"></p>
                                     <p id="partyPass"></p>
+                                    <p id="partySlide"></p>
                                 </div>
                             </div>
                         </div>
@@ -720,8 +721,60 @@
 		});
 	}
 	
+	function getNextQues(){
+		var data = JSON.parse(JSON.stringify(partiesData));
+		
+		var num = -1;
+		for (var i = 0; i < data.parties.length; i++){
+			if (data.parties[i].id == partyId){
+				num = i;
+			}
+		}
+		console.log(num);
+		
+		var quess = data.parties[num].questions;
+		
+		var ques = null;
+		for (var i = 0; i < quess.length; i++){
+			if (quess[i].current){
+				if (i != quess.length - 1){
+					ques = quess[i + 1].question;	
+					break;
+				}
+			}
+		}
+		
+		if (ques == null && quess.length != 0){
+			ques = quess[0].question;
+		}
+		return ques;
+	}
+	
 	function autoNextQues(){
+		setSlideLegacy(0).done(function(){
+			//pauseSleep(5000);
 			
+			var nextQues = getNextQues();
+			
+			if (nextQues == null){
+				showMsg("Notice", "No next question available.");
+				return;
+			}
+			
+			setCurrQues(nextQues).done(function(){
+				setSlideLegacy(1).done(function(){
+					showMsg("Notice", "Question \"" + nextQues + "\" has been set as next question.");
+				});
+			});
+		});
+	}
+	
+	function pauseSleep(millis)
+	{
+    	var date = new Date();
+   	 	var curDate = null;
+    	do { curDate = new Date(); }
+    	while(curDate-date < millis);
 	}
 	
 	function setSlide(){
@@ -731,7 +784,7 @@
 	}
 	
 	function setSlideLegacy(slide){
-		$.ajax({
+		return $.ajax({
 			url: url + "/api/",
 			dataType: "json",
 			data: {
@@ -766,7 +819,7 @@
 	}
 	
 	function setCurrQues(ques){
-		$.ajax({
+		return $.ajax({
 			url: url + "/api/",
 			dataType: "json",
 			data: {
@@ -1001,6 +1054,28 @@
 		partyId = party.id;
 		$("#partyOwner").html("Owner: " + party.owner);
 		$("#partyPass").html("Password: " + party.password);
+		
+		var slideStr = "";
+		switch (party.slide){
+		case -1:
+			slideStr += "<strong class=\"text-danger\">Force log-off</strong>";
+			break;
+		case 0:
+			slideStr += "<span class=\"text-warning\">Waiting</span>";
+			break;
+		case 1:
+			slideStr += "<strong class=\"text-primary\">Question</strong>";
+			break;
+		case 2:
+			slideStr += "<span class=\"text-info\">Round scoreboard</span>";
+			break;
+		case 3:
+			slideStr += "<span class=\"text-info\">Scoreboard</span>";
+			break;
+		default:
+			slideStr += "Unknown slide number: " + party.slide;
+		}
+		$("#partySlide").html("Current Slide: " + slideStr);
 		
 		var playersStr = "";
 		var players = party.players;
