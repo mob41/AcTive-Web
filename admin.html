@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -158,23 +159,23 @@
                             	<div class="col-lg-12">
                                 	<div class="row">
                                     	<div class="col-lg-6">
-                                        	<button class="btn btn-warning btn-lg btn-block" onclick="$('#changeSlide').val('0'); setSlide();">Waiting Slide</button>
+                                			<button class="btn btn-danger btn-lg btn-block" onclick="if(confirm('Are you sure to force log-off all players? This cannot be undone!')){setSlideLegacy(-1);}">Force log-off</button>
                                         </div>
                                     	<div class="col-lg-6">
-                                			<button class="btn btn-warning btn-lg btn-block" onclick="$('#changeSlide').val('3'); setSlide();">Waiting Question Slide</button>
-                                        </div>
-                                    </div>
-                                	<div class="row">
-                                    	<div class="col-lg-6">
-                                			<button class="btn btn-primary btn-lg btn-block" onclick="$('#changeSlide').val('1'); setSlide();">Question Slide</button>
-                                        </div>
-                                    	<div class="col-lg-6">
-                                			<button class="btn btn-info btn-lg btn-block" onclick="$('#changeSlide').val('2'); setSlide();">Round Score Slide</button>
+                                        	<button class="btn btn-warning btn-lg btn-block" onclick="setSlideLegacy(0)">Waiting Slide</button>
                                         </div>
                                     </div>
                                 	<div class="row">
                                     	<div class="col-lg-6">
-                                			<button class="btn btn-info btn-lg btn-block" onclick="$('#changeSlide').val('4'); setSlide();">Scoreboard Slide</button>
+                                			<button class="btn btn-primary btn-lg btn-block" onclick="setSlideLegacy(1)">Question Slide</button>
+                                        </div>
+                                    	<div class="col-lg-6">
+                                			<button class="btn btn-info btn-lg btn-block" onclick="if(confirm('This can clear the players streak. Are you sure?')){setSlideLegacy(2);}">Round Score Slide</button>
+                                        </div>
+                                    </div>
+                                	<div class="row">
+                                    	<div class="col-lg-6">
+                                			<button class="btn btn-info btn-lg btn-block" onclick="setSlideLegacy(3)">Scoreboard Slide</button>
                                         </div>
                                     	<div class="col-lg-6">
                                 			<button class="btn btn-primary btn-lg btn-block" onclick="autoNextQues()">Automate Next Question</button>
@@ -249,7 +250,7 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                        	<button class="btn btn-success" onclick="addQues()">Add question</button> <button class="btn btn-info" onclick="addQuesFile()">Add questions by file</button> <button class="btn btn-default" onclick="nextQues()">Next question as current</button>
+                        	<button class="btn btn-success" onclick="addQues()">Add question</button> <button class="btn btn-info" onclick="addQuesByJson(prompt('Enter questions JSON:'))">Add questions by JSON</button> <button class="btn btn-default" onclick="nextQues()">Next question as current</button>
                         </div>
                     </div>
                 </div>
@@ -311,7 +312,7 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                        	<button class="btn btn-success" onclick="addParty()">Add Party</button> <button class="btn btn-default" onclick="updatePartiesData()">Refresh</button>
+                        	<button class="btn btn-success" onclick="addParty()">Add Party</button> <button class="btn btn-info" onclick="addPartiesByJson(prompt('Enter Parties JSON:'))">Add parties by JSON</button> <button class="btn btn-default" onclick="updatePartiesData()">Refresh</button>
                         </div>
                     </div>
                 </div>
@@ -611,6 +612,30 @@
 		connectActive();
 	}
 	
+	function addPartiesByJson(jsonStr){
+		var json = JSON.parse(jsonStr);
+		if (json == null){
+			showMsg("Error", "JSON parsing error, returned null");
+			return;	
+		}
+		
+		var parties = json.parties;
+		for (var i = 0; i < parties.length; i++){
+			var id = parties[i].id;
+			var owner = parties[i].owner;
+			var pass = parties[i].pass;
+			
+			addPartyLegacy(id, owner, pass).done(function(){
+				console.log(json);
+				var p = JSON.stringify(parties[i]);
+				console.log(p);
+				addQuesByJson(p, false);
+			});
+		}
+		
+		showMsg("Success", "Successfully added " + parties.length + " parties.");
+	}
+	
 	function addParty(){
 		$("#addPartyModal").modal();	
 	}
@@ -620,7 +645,11 @@
 		var owner = $("#addPartyOwner").val();
 		var pass = $("#addPartyPass").val();
 		
-		$.ajax({
+		addPartyLegacy(id, owner, pass);
+	}
+	
+	function addPartyLegacy(id, owner, pass){
+		return $.ajax({
 			url: url + "/api/",
 			dataType: "json",
 			data: {
@@ -657,8 +686,51 @@
 		});
 	}
 	
+	function removeParty(id){
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "partyControl",
+				"partyAction": "removeParty",
+				"partyId": id,
+				"key": key
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					//updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -3){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+				} else if (data.result == -2){
+					showMsg("Error", "Key expired. Please login again.");
+					clearInterval(eventInterval);
+					chgSlide(0);
+				} else if (data.result == -5){
+					showMsg("Error", "Party ID \"" + partyId + "\" does not exist.");	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function autoNextQues(){
+			
+	}
+	
 	function setSlide(){
 		var slide = $("#changeSlide").val();
+		
+		setSlideLegacy(slide);
+	}
+	
+	function setSlideLegacy(slide){
 		$.ajax({
 			url: url + "/api/",
 			dataType: "json",
@@ -732,6 +804,69 @@
 		$("#addQuesModal").modal();	
 	}
 	
+	function removeQues(ques){
+		$.ajax({
+			url: url + "/api/",
+			dataType: "json",
+			data: {
+				"action": "partyControl",
+				"partyAction": "removeQues",
+				"partyId": partyId,
+				"key": key,
+				"question": ques
+			},
+			method: "POST",
+			timeout: 10000,
+			success: function(data){
+				console.log(data);
+				if (data.result == 0){
+					//updatePartiesData();
+					//eventInterval = setInterval(function(){getEvents()}, 1000);	
+				} else if (data.result == -3){
+					showMsg("Error", "Client Error: Missing parameters: " + data.message);
+				} else if (data.result == -2){
+					showMsg("Error", "Key expired. Please login again.");
+					clearInterval(eventInterval);
+					chgSlide(0);
+				} else if (data.result == -5){
+					showMsg("Error", "Party ID \"" + partyId + "\" does not exist.");	
+				} else if (data.result == -8){
+					showMsg("Error", "The question \"" + ques + "\" does not exist.");	
+				}
+			},
+			error: function(xhr, textStatus, errorCode){
+				showMsg("Error", "<i class=\"fa fa-exclamation-circle\"></i> Could not connect to AcTive server: " + textStatus + " code: " + errorCode+ "<br />Please connect again.");
+				chgSlide(0);
+			}
+		});
+	}
+	
+	function addQuesByJson(jsonStr, isShowMsg){
+		console.log(jsonStr);
+		var json = JSON.parse(jsonStr);
+		if (json == null){
+			showMsg("Error", "JSON parsing error, returned null");
+			return;	
+		}
+		
+		var quess = json.questions;
+		for (var i = 0; i < quess.length; i++){
+			var ques = quess[i].ques;
+			var timeout = quess[i].timeout;
+			var corrAns = quess[i].corrAns;
+			var ans1 = quess[i].ans1;
+			var ans2 = quess[i].ans2;
+			var ans3 = quess[i].ans3;
+			var ans4 = quess[i].ans4;
+		
+			addQuesLegacy(ques, timeout, corrAns, ans1, ans2, ans3, ans4);	
+		}
+		
+		if (isShowMsg == null || isShowMsg == true){
+			showMsg("Success", "Successfully added " + quess.length + " questions.");	
+		}
+	}
+	
 	function addQuesFromModal(){
 		var ques = $("#addQuesQuestion").val();	
 		var timeout = $("#addQuesTimeout").val();
@@ -741,7 +876,11 @@
 		var ans3 = $("#addQuesAns3").val();
 		var ans4 = $("#addQuesAns4").val();
 		
-		$.ajax({
+		addQuesLegacy(ques, timeout, corrAns, ans1, ans2, ans3, ans4);	
+	}
+	
+	function addQuesLegacy(ques, timeout, corrAns, ans1, ans2, ans3, ans4){
+		return $.ajax({
 			url: url + "/api/",
 			dataType: "json",
 			data: {
@@ -877,8 +1016,8 @@
 			playersStr += "<td>" + (player.answeredQuestion != null ? player.answeredQuestion.question + " <button class=\"btn btn-warning\" onclick=\"linkToQues('" + player.answeredQuestion.question + "')\">Link To</button>" : "None") + "</td>";
 			playersStr += "<td>" + player.answeredQuestionAns + "</td>";
 			playersStr += "<td>" + player.lastConnect + "</td>";
-			playersStr += "<td>" + (lat <= 30000 ? lat + " ms" : "---") + "</td>";
-			playersStr += "<td>" + (lat > 30000 ? "Offline" : "Online") + "</td>";
+			playersStr += "<td>" + (lat <= 30000 ? (lat >= 5000 ? "<strong class=\"text-danger\">" + lat + " ms" + "</strong>" : lat + " ms") : "---") + "</td>";
+			playersStr += "<td>" + (lat > 30000 ? "<span class=\"text-danger\">Offline</span>" : "<strong class=\"text-success\">Online</strong>") + "</td>";
 			
 			playersStr += "</tr>";
 		}
@@ -897,7 +1036,7 @@
 			quesStr += "<td>" + ques.answers[ques.correctIndex] + " (" + ques.correctIndex + ")</td>";
 			quesStr += "<td>" + ques.timeout + " ms</td>";
 			quesStr += "<td>" + ques.endTime + "</td>";
-			quesStr += "<td><button class=\"btn btn-info\" onclick=\"setCurrQues('" + ques.question + "')\">Set as current</button></td>";
+			quesStr += "<td><button class=\"btn btn-info\" onclick=\"setCurrQues('" + ques.question + "')\">Set as current</button><button class=\"btn btn-danger\" onclick=\"if (confirm('Are you sure to remove this?')){removeQues('" + ques.question + "');}\">Remove</button></td>";
 			
 			quesStr += "</tr>";
 		}
@@ -917,7 +1056,7 @@
 				str += "<td>" + party.owner + "</td>";
 				str += "<td>" + party.players.length + "</td>";
 				str += "<td>" + party.questions.length + "</td>";
-				str += "<td><button class=\"btn btn-success\" onclick=\"partyControl(" + i + ")\">Control</button></td>";
+				str += "<td><button class=\"btn btn-success\" onclick=\"partyControl(" + i + ")\">Control</button><button class=\"btn btn-danger\" onclick=\"if(confirm('Are you sure to remove this party?')){removeParty('" + party.id + "');}\">Remove</button></td>";
 				
 				str += "</tr>";
 			}
@@ -997,6 +1136,7 @@
 				}
 				
 				console.log(data);
+				
 				if (data.slide == 0){ //Locked
 					chgSlide(2);
 					$("#awaitingNickName").html("Hi, " + name + "!");

@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -528,7 +529,10 @@
 			timeout: 10000,
 			dataType: "json",
 			success: function(data){
-				if (data.result == 1){
+				if (data.result == -3){
+					showMsg("Error", "You cannot join this party, because its \"Force Log-off\" flag is on.");
+					chgSlide(0);
+				} else if (data.result == 1){
 					showMsg("Error", "Your nickname has already exist. Please choose another one.");
 					chgSlide(0);
 				} else if (data.result == 0){
@@ -626,7 +630,13 @@
 				}
 				
 				console.log(data);
-				if (data.slide == 0){ //Locked
+				
+				if (data.slide == -1){ //Logoff
+					clearInterval(eventInterval);
+					cleanup();
+					chgSlide(0);
+					showMsg("Notice", "You are forced to log off.");
+				} else if (data.slide == 0){ //Locked
 					chgSlide(2);
 					$("#awaitingNickName").html("Hi, " + name + "!");
 				} else if (data.slide == 1){ //Questions
@@ -647,15 +657,17 @@
 					$("#ans3").html(data.ans[2]);
 					$("#ans4").html(data.ans[3]);
 					
-				} else if (data.slide == 2){ //Score
+				} else if (data.slide == 2 || data.slide == 3){ //Score
 					chgSlide(4);	
 					$("#playerScore").html(data.scoreHtml);
 					$("#scoreBoard").html(data.scoreboardHtml);
 					
-					if (data.correct){
-						$("#correctBody").attr("style", "display:");
-					} else {
-						$("#wrongBody").attr("style", "display:");	
+					if (data.slide == 2){
+						if (data.correct){
+							$("#correctBody").attr("style", "display:");
+						} else {
+							$("#wrongBody").attr("style", "display:");	
+						}	
 					}
 				}
 			},
