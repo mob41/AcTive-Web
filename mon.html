@@ -226,6 +226,12 @@
                         	<div class="row">
                             	<div class="col-lg-12"><div id="answers-chart"></div></div>
                             </div>
+                        	<div class="row">
+                            	<div id="textans1" class="text-primary"></div>
+                            	<div id="textans2" class="text-info"></div>
+                            	<div id="textans3" class="text-warning"></div>
+                            	<div id="textans4" class="text-danger"></div>
+                            </div>
                         </div>
                         <div class="panel-footer">
                         </div>
@@ -244,6 +250,7 @@
                             </div>
                         </div>
                         <div class="panel-footer">
+							Copyright (c) 2017 Anthony Law. Licensed under the GPLv3 Public License.
                         </div>
                     </div>
                 </div>
@@ -923,7 +930,7 @@
 			}
 			
 			var data = party.questions[currIndex]; 
-			$("#quesNum").html("Question No." + (data.currIndex + 1));
+			$("#quesNum").html("Question No." + (currIndex + 1));
 			$("#ques").html(data.question);
 			
 			var left = ((data.endTime - new Date().getTime()));
@@ -986,11 +993,21 @@
 				if (!(a == 0 && b == 0 && c== 0 && d==0)){
 						
 				
-				chartData.push({label: quesData.answers[0], value: a});
-				chartData.push({label: quesData.answers[1], value: b});
-				chartData.push({label: quesData.answers[2], value: c});
-				chartData.push({label: quesData.answers[3], value: d});
+				chartData.push({label: "Dark-blue", value: a});
+				chartData.push({label: "Light-blue", value: b});
+				chartData.push({label: "Yellow", value: c});
+				chartData.push({label: "Red", value: d});
 				}
+			
+				$("#textans1").html("Dark-blue: " + quesData.answers[0]);
+				$("#textans2").html("Light-blue: " + quesData.answers[1]);
+				$("#textans3").html("Yellow: " + quesData.answers[2]);
+				$("#textans4").html("Red: " + quesData.answers[3]);
+			} else {
+				$("#textans1").html("");
+				$("#textans2").html("");
+				$("#textans3").html("");
+				$("#textans4").html("Error: No question answer data received");
 			}
 			
 			$("#answers-chart").html("");
