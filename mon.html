@@ -926,7 +926,7 @@
 			$("#quesNum").html("Question No." + (data.currIndex + 1));
 			$("#ques").html(data.question);
 			
-			var left = ((data.time - new Date().getTime()));
+			var left = ((data.endtime - new Date().getTime()));
 			var percent = left / data.timeout * 100;
 			
 			$("#timeText").html(left / 1000 + " sec left");
