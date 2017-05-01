@@ -995,14 +995,14 @@
 				if (!(a == 0 && b == 0 && c== 0 && d==0)){
 						
 				
-				chartData.push({label: "Dark-blue", value: a});
-				chartData.push({label: "Light-blue", value: b});
+				chartData.push({label: "Light-blue", value: a});
+				chartData.push({label: "Dark-blue", value: b});
 				chartData.push({label: "Yellow", value: c});
 				chartData.push({label: "Red", value: d});
 				}
 			
-				$("#textans1").html("Dark-blue: " + quesData.answers[0]);
-				$("#textans2").html("Light-blue: " + quesData.answers[1]);
+				$("#textans1").html("Light-blue: " + quesData.answers[0]);
+				$("#textans2").html("Dark-blue: " + quesData.answers[1]);
 				$("#textans3").html("Yellow: " + quesData.answers[2]);
 				$("#textans4").html("Red: " + quesData.answers[3]);
 			} else {
@@ -1016,6 +1016,7 @@
 			Morris.Donut({
         			element: 'answers-chart',
         			data: chartData,
+					colors: ["#337ab7", "#31708f", "#8a6d3b", "#a94442"],
         			resize: true
     			});	
 			if ($("#answers-chart").html() == ""){
